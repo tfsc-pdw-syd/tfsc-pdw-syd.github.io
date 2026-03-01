@@ -689,7 +689,7 @@ a:hover { color: var(--primary-light); }
 
 .author-row-header {
   display: grid;
-  grid-template-columns: 1fr 1fr 180px 32px;
+  grid-template-columns: 1fr 1fr 1fr 140px 32px;
   gap: 10px;
   font-size: 0.75rem;
   font-weight: 700;
@@ -701,7 +701,7 @@ a:hover { color: var(--primary-light); }
 }
 .author-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 180px 32px;
+  grid-template-columns: 1fr 1fr 1fr 140px 32px;
   gap: 10px;
   margin-bottom: 8px;
   align-items: center;
@@ -709,6 +709,12 @@ a:hover { color: var(--primary-light); }
 @media (max-width: 768px) {
   .author-row-header { display: none; }
   .author-row { grid-template-columns: 1fr; }
+}
+.sub-textarea {
+  resize: vertical;
+  min-height: 130px;
+  font-family: inherit;
+  line-height: 1.5;
 }
 
 .sub-btn-remove {

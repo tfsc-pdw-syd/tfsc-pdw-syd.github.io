@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="description" content="TFSC Special Issue Paper Development Workshop 2026 – Sydney, Australia, July 16, 2026. Pre-workshop: AII-EEKE 2026 on July 15. Co-located with FLINS-ISKE 2026." />
-    <title>TFSC Special Issue PDW 2026 – Paper Development Workshop (Sydney)</title>
+    <meta name="description" content="TFSC Paper Development Workshop 2026 – Sydney, Australia, July 16, 2026. Open to all papers targeting Technological Forecasting and Social Change (TFSC), with a featured focus on the Special Issue on LLMs in Technology Management. Pre-workshop: AII-EEKE 2026 on July 15." />
+    <title>TFSC PDW 2026 – Paper Development Workshop (Sydney)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
       <div class="container header-row">
         <div class="header-left">
           <!-- <span class="header-badge">Paper Development Workshop</span> -->
-          <h1>TFSC Special Issue Paper Development Workshop 2026</h1>
+          <h1>TFSC Paper Development Workshop 2026</h1>
           <p class="tagline">Sydney, Australia, July 16, 2026</p>
           <p class="event-link">
             Pre-workshop (15 July):&nbsp;
@@ -67,11 +67,12 @@
             </div>
           </div>
           <p>
-            This paper development workshop (PDW) brings together researchers to provide feedback, mentorship, and
-            development support for authors preparing high-quality submissions. The PDW addresses a pivotal moment in
-            technology management research, where advances in Large Language Models (LLMs) are transforming how we
-            engage with large-scale unstructured data across scientific literature, patent landscapes, market discourse,
-            and beyond.
+            This paper development workshop (PDW) brings together researchers to receive collegial feedback, mentorship,
+            and development support for manuscripts targeting <em>Technological Forecasting and Social Change</em> (TFSC).
+            The PDW is open to all researchers preparing papers for TFSC, regardless of topic, while placing a featured
+            focus on a current Special Issue at a pivotal moment in technology management research, where advances in
+            Large Language Models (LLMs) are transforming how we engage with scientific literature, patent landscapes,
+            market discourse, and beyond.
           </p>
           <h3 class="about-section-heading">Workshop Objectives</h3>
           <p>
@@ -94,8 +95,8 @@
             supportive and collegial space to refine your work and connect with an interdisciplinary community of scholars.
           </p>
           <p>
-            This PDW is specifically designed to support researchers developing papers for potential submission to the
-            <strong>TFSC Special Issue</strong>:
+            In addition to welcoming all TFSC-targeted work, this PDW has a <strong>specific aim</strong> of fostering
+            high-quality submissions to the following TFSC Special Issue:
           </p>
           <div class="si-title-box">
             <span class="si-label">Special Issue</span>
@@ -244,20 +245,23 @@
         <div class="tab-content hidden" id="submissions" role="tabpanel">
           <h2>PDW Submissions</h2>
           <p>
-            We welcome authors with an initial research idea at any early stage of development. To participate, only a
-            long abstract of <strong>up to 2 pages</strong> is required. No full manuscript needed.
+            We welcome researchers developing papers for <em>Technological Forecasting and Social Change</em> (TFSC)
+            at any early stage of development. Submissions on all topics relevant to TFSC are encouraged, with
+            particular focus on papers aligned with the Special Issue on
+            <em>Large Language Models as Methodological Innovators: Advancing Theory and Practice in Technology Management</em>.
+            To participate, please submit a paper of <strong>up to 10 pages</strong> (including references).
           </p>
           <div class="submission-box">
             <h3>Submission Requirements</h3>
             <ul class="checklist">
-              <li>Long abstract (up to 2 pages)</li>
+              <li>Paper (up to 10 pages, including references)</li>
               <li>Title</li>
               <li>Authors and affiliations</li>
               <li>ORCIDs (if available)</li>
               <li>References</li>
             </ul>
           </div>
-          <h3 class="about-section-heading" style="margin-top: 28px;">Submit Your Abstract</h3>
+          <h3 class="about-section-heading" style="margin-top: 28px;">Submit Your Paper</h3>
           <form id="submission-form" class="sub-form" novalidate>
 
             <div class="sub-form-group">
@@ -269,17 +273,23 @@
             <div class="sub-form-group">
               <label class="sub-label">Authors <span class="sub-required">*</span></label>
               <div class="author-row-header">
-                <span>Full Name</span><span>Affiliation</span><span>ORCID (optional)</span><span></span>
+                <span>Full Name</span><span>Affiliation</span><span>Email</span><span>ORCID (optional)</span><span></span>
               </div>
               <div id="authors-list"></div>
               <button type="button" class="sub-btn-add" id="btn-add-author">+ Add Another Author</button>
             </div>
 
             <div class="sub-form-group">
-              <label class="sub-label" for="sub-email">Your Contact Email <span class="sub-required">*</span></label>
+              <label class="sub-label" for="paper-abstract">Abstract <span class="sub-required">*</span></label>
+              <textarea class="sub-input sub-textarea" id="paper-abstract" required
+                        placeholder="Paste your abstract here"></textarea>
+            </div>
+
+            <div class="sub-form-group">
+              <label class="sub-label" for="sub-email">Corresponding Author Email <span class="sub-required">*</span></label>
               <input class="sub-input" type="email" id="sub-email" required
                      placeholder="you@example.com">
-              <small class="sub-hint">A confirmation email will be sent to this address upon submission.</small>
+              <small class="sub-hint">Confirmation email will be sent here; co-authors will be CC'd.</small>
             </div>
 
             <div class="sub-form-group">
@@ -290,7 +300,7 @@
             </div>
 
             <div id="sub-message" class="sub-message" hidden></div>
-            <button type="submit" class="sub-btn-submit" id="btn-submit">Submit Abstract</button>
+            <button type="submit" class="sub-btn-submit" id="btn-submit">Submit Paper</button>
           </form>
         </div>
 
@@ -303,7 +313,7 @@
               <div class="timeline-body">
                 <span class="timeline-label">Deadline</span>
                 <strong>1 May 2026: Paper Submissions</strong>
-                <p>Submit your long abstract (up to 2 pages) by this date.</p>
+                <p>Submit your paper (up to 10 pages) by this date.</p>
               </div>
             </div>
             <div class="timeline-item">
@@ -334,7 +344,7 @@
               <div class="timeline-dot"></div>
               <div class="timeline-body">
                 <span class="timeline-label">Workshop</span>
-                <strong>16 July 2026: TFSC Special Issue PDW</strong>
+                <strong>16 July 2026: TFSC Paper Development Workshop</strong>
                 <p>In-person workshop.</p>
               </div>
             </div>
@@ -368,7 +378,7 @@
             </div>
             <div class="info-card">
               <h3>Accommodation &amp; Practicalities</h3>
-              <p>For accommodation and local tips please consult the <a href="https://ai-informetrics.github.io/2026/" target="_blank" rel="noopener">AI-EEKE 2026 website</a> and your local travel advisories.</p>
+              <p>For accommodation and local tips please consult the <a href="https://2026.flins.cc/" target="_blank" rel="noopener">FLINS-ISKE 2026 website</a>.</p>
             </div>
           </div>
         </div>
@@ -391,7 +401,7 @@
             </div>
           </div>
           <p class="contact-email">
-            <a href="mailto:workshop-contact@example.org">workshop-contact@example.org</a>
+            <a href="mailto:tfscpdwsyd@gmail.com">tfscpdwsyd@gmail.com</a>
           </p>
         </div>
 
@@ -400,7 +410,7 @@
 
     <footer class="site-footer">
       <div class="container footer-inner">
-        <span>&copy; 2026 TFSC Special Issue PDW, University of Technology Sydney</span>
+        <span>&copy; 2026 TFSC Paper Development Workshop, University of Technology Sydney</span>
         <nav class="footer-links">
           <a href="https://2026.flins.cc/" target="_blank" rel="noopener">FLINS-ISKE 2026</a>
           <a href="https://ai-informetrics.github.io/2026/" target="_blank" rel="noopener">AII-EEKE 2026</a>
@@ -446,9 +456,10 @@
           const row  = document.createElement('div');
           row.className = 'author-row';
           row.innerHTML = `
-            <input class="sub-input" type="text"   name="author_name"  placeholder="Full Name${isFirst ? ' *' : ''}"  ${isFirst ? 'required' : ''}>
-            <input class="sub-input" type="text"   name="author_affil" placeholder="Affiliation${isFirst ? ' *' : ''}" ${isFirst ? 'required' : ''}>
-            <input class="sub-input" type="text"   name="author_orcid" placeholder="ORCID (optional)">
+            <input class="sub-input" type="text"  name="author_name"  placeholder="Full Name${isFirst ? ' *' : ''}"  ${isFirst ? 'required' : ''}>
+            <input class="sub-input" type="text"  name="author_affil" placeholder="Affiliation${isFirst ? ' *' : ''}" ${isFirst ? 'required' : ''}>
+            <input class="sub-input" type="email" name="author_email" placeholder="Email${isFirst ? ' *' : ' (optional)'}">
+            <input class="sub-input" type="text"  name="author_orcid" placeholder="ORCID (optional)">
             ${isFirst ? '<span></span>' : '<button type="button" class="sub-btn-remove" title="Remove author">&#x2715;</button>'}
           `;
           if (!isFirst) {
@@ -468,31 +479,40 @@
           /* Collect authors */
           const authors = [];
           let authorsValid = true;
-          document.querySelectorAll('.author-row').forEach(row => {
+          let firstAuthorEmailMissing = false;
+          document.querySelectorAll('.author-row').forEach((row, idx) => {
             const name  = row.querySelector('[name="author_name"]').value.trim();
             const affil = row.querySelector('[name="author_affil"]').value.trim();
+            const email = row.querySelector('[name="author_email"]').value.trim();
             const orcid = row.querySelector('[name="author_orcid"]').value.trim();
             if (!name || !affil) { authorsValid = false; return; }
-            authors.push({ name, affiliation: affil, orcid });
+            if (idx === 0 && !email) { firstAuthorEmailMissing = true; return; }
+            authors.push({ name, affiliation: affil, email, orcid });
           });
 
           if (!authorsValid || authors.length === 0) {
             return showMsg(msg, 'Please fill in the name and affiliation for every author.', 'error');
           }
+          if (firstAuthorEmailMissing) {
+            return showMsg(msg, 'Please enter an email address for the first author.', 'error');
+          }
 
-          const title  = document.getElementById('paper-title').value.trim();
-          const email  = document.getElementById('sub-email').value.trim();
-          const file   = document.getElementById('manuscript-file').files[0];
+          const title    = document.getElementById('paper-title').value.trim();
+          const abstract = document.getElementById('paper-abstract').value.trim();
+          const email    = document.getElementById('sub-email').value.trim();
+          const file     = document.getElementById('manuscript-file').files[0];
 
-          if (!title)  return showMsg(msg, 'Please enter the paper title.', 'error');
-          if (!email)  return showMsg(msg, 'Please enter your contact email.', 'error');
-          if (!file)   return showMsg(msg, 'Please attach your manuscript.', 'error');
+          if (!title)    return showMsg(msg, 'Please enter the paper title.', 'error');
+          if (!abstract) return showMsg(msg, 'Please enter the abstract.', 'error');
+          if (!email)    return showMsg(msg, 'Please enter the corresponding author email.', 'error');
+          if (!file)     return showMsg(msg, 'Please attach your manuscript.', 'error');
           if (file.size > 20 * 1024 * 1024) {
             return showMsg(msg, 'File exceeds the 20 MB limit. Please compress and try again.', 'error');
           }
 
           const fd = new FormData();
           fd.append('title',           title);
+          fd.append('abstract',        abstract);
           fd.append('submitter_email', email);
           fd.append('authors',         JSON.stringify(authors));
           fd.append('manuscript',      file);
@@ -514,10 +534,10 @@
               throw new Error(data.error || 'Submission failed.');
             }
           } catch (err) {
-            showMsg(msg, err.message || 'An error occurred. Please try again or email mengjia.wu@uts.edu.au directly.', 'error');
+            showMsg(msg, err.message || 'An error occurred. Please try again or email tfscpdwsyd@gmail.com directly.', 'error');
           } finally {
             btn.disabled    = false;
-            btn.textContent = 'Submit Abstract';
+            btn.textContent = 'Submit Paper';
           }
         });
 

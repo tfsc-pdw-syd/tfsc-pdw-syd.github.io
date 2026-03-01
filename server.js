@@ -57,9 +57,9 @@ function requireAdmin(req, res, next) {
 // ── POST /submit ──────────────────────────────────────────────────────────────
 app.post('/submit', upload.single('manuscript'), async (req, res) => {
   try {
-    const { title, submitter_email, authors: authorsJSON } = req.body;
+    const { title, abstract, submitter_email, authors: authorsJSON } = req.body;
 
-    if (!title || !submitter_email || !authorsJSON || !req.file) {
+    if (!title || !abstract || !submitter_email || !authorsJSON || !req.file) {
       return res.status(400).json({ error: 'Missing required fields.' });
     }
 
@@ -70,11 +70,17 @@ app.post('/submit', upload.single('manuscript'), async (req, res) => {
 
     const authorsText = authors
       .map((a, i) => {
-        let line = `${i + 1}. ${a.name} — ${a.affiliation}`;
+        let line = `${i + 1}. ${a.name} - ${a.affiliation}`;
+        if (a.email) line += ` - ${a.email}`;
         if (a.orcid) line += ` (ORCID: ${a.orcid})`;
         return line;
       })
       .join('\n');
+
+    // Build CC list from co-author emails (excluding the corresponding author)
+    const ccAddresses = authors
+      .map(a => a.email)
+      .filter(e => e && e !== submitter_email);
 
     // ── Save file to disk ───────────────────────────────────────────────────
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -84,8 +90,9 @@ app.post('/submit', upload.single('manuscript'), async (req, res) => {
 
     // ── Append submission record ────────────────────────────────────────────
     const record = {
-      submittedAt:     new Date().toISOString(),
+      submittedAt:      new Date().toISOString(),
       title,
+      abstract,
       authors,
       submitter_email,
       originalFilename: req.file.originalname,
@@ -103,14 +110,17 @@ app.post('/submit', upload.single('manuscript'), async (req, res) => {
       replyTo: submitter_email,
       subject: `[PDW Submission] ${title}`,
       text: [
-        'A new abstract has been submitted to the TFSC Special Issue PDW 2026.',
+        'A new abstract has been submitted to the TFSC Paper Development Workshop 2026.',
         '',
         `Title: ${title}`,
         '',
         'Authors:',
         authorsText,
         '',
-        `Submitter email: ${submitter_email}`
+        `Corresponding author email: ${submitter_email}`,
+        '',
+        'Abstract:',
+        abstract
       ].join('\n'),
       attachments: [{
         filename: req.file.originalname,
@@ -118,20 +128,30 @@ app.post('/submit', upload.single('manuscript'), async (req, res) => {
       }]
     });
 
+    const authorsNameList = authors.map((a, i) => `${i + 1}. ${a.name} - ${a.affiliation}`).join('\n');
+
     await transporter.sendMail({
       from:    `"TFSC PDW 2026" <${process.env.EMAIL_USER}>`,
       to:      submitter_email,
-      subject: 'Submission Received – TFSC Special Issue Paper Development Workshop 2026',
+      cc:      ccAddresses.length ? ccAddresses : undefined,
+      subject: 'Submission Received - TFSC Paper Development Workshop 2026',
       text: [
         'Dear Author,',
         '',
-        'Thank you for submitting to the TFSC Special Issue Paper Development Workshop 2026.',
+        'Thank you for submitting to the TFSC Paper Development Workshop 2026.',
+        'We have received your submission with the following details:',
         '',
-        `We have received your abstract: "${title}"`,
+        `Title: ${title}`,
         '',
-        'You will be notified of the outcome by 20 May 2026.',
+        'Authors:',
+        authorsNameList,
         '',
-        'If you have any questions, please contact mengjia.wu@uts.edu.au.',
+        'Abstract:',
+        abstract,
+        '',
+        'You will be notified of the outcome in due course.',
+        '',
+        'If you have any questions, please contact tfscpdwsyd@gmail.com.',
         '',
         'Best regards,',
         'TFSC PDW 2026 Organising Committee',
@@ -147,7 +167,7 @@ app.post('/submit', upload.single('manuscript'), async (req, res) => {
   }
 });
 
-// ── GET /admin — submission dashboard ────────────────────────────────────────
+// ── GET /admin - submission dashboard ────────────────────────────────────────
 app.get('/admin', requireAdmin, (req, res) => {
   const token = req.query.token;
 
@@ -191,7 +211,7 @@ app.get('/admin', requireAdmin, (req, res) => {
   </style>
 </head>
 <body>
-  <h1>TFSC PDW 2026 — Submissions (${records.length})</h1>
+  <h1>TFSC PDW 2026 - Submissions (${records.length})</h1>
   <div class="actions">
     <a href="/admin/submissions.csv?token=${token}">Download CSV</a>
     <a href="/admin/submissions.json?token=${token}">Download JSON</a>
