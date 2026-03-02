@@ -684,8 +684,41 @@ a:hover { color: var(--primary-light); }
 }
 .organiser-card p { font-size: 0.93rem; margin: 0; }
 
-.contact-email {
-  font-size: 1rem;
+.contact-email-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: linear-gradient(135deg, var(--primary-pale), #fff);
+  border: 1px solid rgba(183,28,28,0.15);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  padding: 18px 24px;
+  margin: 16px 0 0;
+}
+.contact-email-icon {
+  font-size: 1.6rem;
+  color: var(--primary);
+  flex-shrink: 0;
+  line-height: 1;
+}
+.contact-email-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  margin: 0 0 4px;
+}
+.contact-email-link {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+.contact-email-link:hover {
+  text-decoration: underline;
+  color: var(--primary-light);
 }
 
 /* =====================  SUBMISSION FORM  ===================== */
