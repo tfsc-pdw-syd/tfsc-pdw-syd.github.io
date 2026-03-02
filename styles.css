@@ -170,12 +170,14 @@ body {
 .tab-button {
   flex: 1;
   min-width: 0;
-  white-space: nowrap;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
   background: transparent;
   border: none;
-  padding: 10px 14px;
+  padding: 10px 10px;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 0.93rem;
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
@@ -195,11 +197,28 @@ body {
   box-shadow: 0 4px 12px rgba(183,28,28,0.28);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 900px) {
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    overflow-x: unset;
+    gap: 6px;
+    padding: 6px;
+    border-radius: var(--radius-md);
+  }
   .tab-button {
-    flex: 0 0 auto;  /* let each button size to its text so the bar can scroll */
-    padding: 8px 11px;
-    font-size: 0.82rem;
+    padding: 10px 8px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tab-button {
+    padding: 10px 6px;
+    font-size: 0.80rem;
   }
 }
 
