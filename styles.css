@@ -350,7 +350,7 @@ a:hover { color: var(--primary-light); }
   padding: 18px 20px;
   margin-top: 20px;
 }
-.callout strong { display: block; margin-bottom: 4px; color: #6d4c00; font-size: 0.95rem; }
+.callout strong { margin-bottom: 4px; color: #6d4c00; font-size: 0.95rem; }
 .callout p { margin: 0; color: #5d4037; font-size: 0.93rem; }
 
 /* =====================  SI TITLE BOX  ===================== */
