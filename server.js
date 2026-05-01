@@ -206,9 +206,10 @@ app.get('/admin', requireAdmin, (req, res) => {
     h1   { color: #8b0000; }
     table { border-collapse: collapse; width: auto; table-layout: auto; font-size: 0.9rem; }
     th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; vertical-align: top; white-space: nowrap; }
-    td:nth-child(3) { white-space: normal; min-width: 140px; max-width: 220px; }
-    td:nth-child(4) { white-space: normal; min-width: 280px; max-width: 400px; overflow-wrap: break-word; }
-    td:nth-child(7) { white-space: pre-wrap; min-width: 300px; max-width: 600px; }
+    td:nth-child(3) { white-space: normal; min-width: 160px; max-width: 240px; overflow-wrap: break-word; }
+    td:nth-child(4) { white-space: normal; min-width: 240px; max-width: 360px; overflow-wrap: break-word; }
+    td:nth-child(7) { white-space: pre-wrap; min-width: 420px; max-width: 700px; overflow-wrap: break-word; }
+    td:nth-child(8) { white-space: normal; min-width: 100px; max-width: 160px; overflow-wrap: break-word; word-break: break-all; }
     th { background: #f5f5f5; }
     a  { color: #8b0000; }
     .actions { margin-bottom: 1.5rem; }
