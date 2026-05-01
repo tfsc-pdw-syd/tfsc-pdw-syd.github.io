@@ -180,8 +180,9 @@ app.get('/admin', requireAdmin, (req, res) => {
   }
 
   const rows = records.map((r, i) => {
-    const authorsStr = r.authors.map(a => `${a.name} (${a.affiliation})`).join('<br>');
-    const date       = new Date(r.submittedAt).toLocaleString('en-AU', { timeZone: 'Australia/Sydney' });
+    const authorsStr  = r.authors.map(a => `${a.name} (${a.affiliation})`).join('<br>');
+    const authorEmails = r.authors.map(a => a.email).filter(Boolean).join('<br>');
+    const date        = new Date(r.submittedAt).toLocaleString('en-AU', { timeZone: 'Australia/Sydney' });
     return `
       <tr>
         <td>${records.length - i}</td>
@@ -189,6 +190,8 @@ app.get('/admin', requireAdmin, (req, res) => {
         <td>${escHtml(r.title)}</td>
         <td>${authorsStr}</td>
         <td>${escHtml(r.submitter_email)}</td>
+        <td>${authorEmails}</td>
+        <td style="max-width:400px;white-space:pre-wrap">${escHtml(r.abstract)}</td>
         <td><a href="/admin/files/${encodeURIComponent(r.savedFilename)}?token=${token}" download="${escHtml(r.originalFilename)}">${escHtml(r.originalFilename)}</a></td>
       </tr>`;
   }).join('');
@@ -219,7 +222,7 @@ app.get('/admin', requireAdmin, (req, res) => {
   ${records.length === 0
     ? '<p>No submissions yet.</p>'
     : `<table>
-        <thead><tr><th>#</th><th>Date (AEST)</th><th>Title</th><th>Authors</th><th>Email</th><th>File</th></tr></thead>
+        <thead><tr><th>#</th><th>Date (AEST)</th><th>Title</th><th>Authors</th><th>Submitter Email</th><th>All Author Emails</th><th>Abstract</th><th>File</th></tr></thead>
         <tbody>${rows}</tbody>
        </table>`
   }
