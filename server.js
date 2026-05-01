@@ -191,7 +191,7 @@ app.get('/admin', requireAdmin, (req, res) => {
         <td>${authorsStr}</td>
         <td>${escHtml(r.submitter_email)}</td>
         <td>${authorEmails}</td>
-        <td style="max-width:400px;white-space:pre-wrap">${escHtml(r.abstract)}</td>
+        <td style="white-space:pre-wrap">${escHtml(r.abstract)}</td>
         <td><a href="/admin/files/${encodeURIComponent(r.savedFilename)}?token=${token}" download="${escHtml(r.originalFilename)}">${escHtml(r.originalFilename)}</a></td>
       </tr>`;
   }).join('');
@@ -204,8 +204,9 @@ app.get('/admin', requireAdmin, (req, res) => {
   <style>
     body { font-family: sans-serif; padding: 2rem; color: #333; }
     h1   { color: #8b0000; }
-    table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
-    th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; vertical-align: top; }
+    table { border-collapse: collapse; width: auto; table-layout: auto; font-size: 0.9rem; }
+    th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; vertical-align: top; white-space: nowrap; }
+    td:nth-child(3), td:nth-child(7) { white-space: normal; min-width: 160px; max-width: 400px; }
     th { background: #f5f5f5; }
     a  { color: #8b0000; }
     .actions { margin-bottom: 1.5rem; }
