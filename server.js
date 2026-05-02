@@ -176,6 +176,7 @@ app.get('/admin', requireAdmin, (req, res) => {
     records = fs.readFileSync(LOG_PATH, 'utf8')
       .trim().split('\n').filter(Boolean)
       .map(line => JSON.parse(line))
+      .slice(3)   // skip first 3 test submissions
       .reverse(); // newest first
   }
 
