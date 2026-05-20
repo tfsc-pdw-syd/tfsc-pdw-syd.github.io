@@ -54,6 +54,59 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+function readSubmissionRecords() {
+  if (!fs.existsSync(LOG_PATH)) return [];
+
+  return fs.readFileSync(LOG_PATH, 'utf8')
+    .trim().split('\n').filter(Boolean)
+    .map(line => JSON.parse(line));
+}
+
+function isTestRecord(record) {
+  const title = String(record.title || '').trim().toLowerCase();
+  const submitterEmail = String(record.submitter_email || '').trim().toLowerCase();
+  const filename = String(record.originalFilename || '').trim().toLowerCase();
+  const authors = Array.isArray(record.authors) ? record.authors : [];
+  const authorText = authors
+    .flatMap(author => [author.name, author.affiliation, author.email])
+    .filter(Boolean)
+    .join(' ')
+    .trim()
+    .toLowerCase();
+
+  return (
+    title === 'test' ||
+    submitterEmail === 'test' ||
+    filename === 'test.pdf' ||
+    authorText === 'test test' ||
+    authorText.includes('test test test')
+  );
+}
+
+function getAdminRecords() {
+  return readSubmissionRecords()
+    .filter(record => !isTestRecord(record))
+    .reverse();
+}
+
+function formatSydneyDate(value) {
+  return new Date(value).toLocaleString('en-AU', { timeZone: 'Australia/Sydney' });
+}
+
+function csvCell(value) {
+  return `"${String(value ?? '').replace(/"/g, '""')}"`;
+}
+
+function setNoStoreHeaders(res) {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+}
+
+function exportTimestamp() {
+  return new Date().toISOString().replace(/[:.]/g, '-');
+}
+
 // ── POST /submit ──────────────────────────────────────────────────────────────
 app.post('/submit', upload.single('manuscript'), async (req, res) => {
   try {
@@ -170,20 +223,14 @@ app.post('/submit', upload.single('manuscript'), async (req, res) => {
 // ── GET /admin - submission dashboard ────────────────────────────────────────
 app.get('/admin', requireAdmin, (req, res) => {
   const token = req.query.token;
-
-  let records = [];
-  if (fs.existsSync(LOG_PATH)) {
-    records = fs.readFileSync(LOG_PATH, 'utf8')
-      .trim().split('\n').filter(Boolean)
-      .map(line => JSON.parse(line))
-      .slice(3)   // skip first 3 test submissions
-      .reverse(); // newest first
-  }
+  const encodedToken = encodeURIComponent(token);
+  const records = getAdminRecords();
 
   const rows = records.map((r, i) => {
-    const authorsStr  = r.authors.map(a => `${a.name} (${a.affiliation})`).join('<br>');
-    const authorEmails = r.authors.map(a => a.email).filter(Boolean).join('<br>');
-    const date        = new Date(r.submittedAt).toLocaleString('en-AU', { timeZone: 'Australia/Sydney' });
+    const authors = Array.isArray(r.authors) ? r.authors : [];
+    const authorsStr  = authors.map(a => `${escHtml(a.name)} (${escHtml(a.affiliation)})`).join('<br>');
+    const authorEmails = authors.map(a => a.email).filter(Boolean).map(escHtml).join('<br>');
+    const date        = formatSydneyDate(r.submittedAt);
     return `
       <tr>
         <td>${records.length - i}</td>
@@ -193,10 +240,11 @@ app.get('/admin', requireAdmin, (req, res) => {
         <td>${escHtml(r.submitter_email)}</td>
         <td>${authorEmails}</td>
         <td>${escHtml(r.abstract)}</td>
-        <td><a href="/admin/files/${encodeURIComponent(r.savedFilename)}?token=${token}" download="${escHtml(r.originalFilename)}">${escHtml(r.originalFilename)}</a></td>
+        <td><a href="/admin/files/${encodeURIComponent(r.savedFilename)}?token=${encodedToken}" download="${escHtml(r.originalFilename)}">${escHtml(r.originalFilename)}</a></td>
       </tr>`;
   }).join('');
 
+  setNoStoreHeaders(res);
   res.send(`<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -221,8 +269,8 @@ app.get('/admin', requireAdmin, (req, res) => {
 <body>
   <h1>TFSC PDW 2026 - Submissions (${records.length})</h1>
   <div class="actions">
-    <a href="/admin/submissions.csv?token=${token}">Download CSV</a>
-    <a href="/admin/submissions.json?token=${token}">Download JSON</a>
+    <a href="/admin/submissions.csv?token=${encodedToken}">Download CSV</a>
+    <a href="/admin/submissions.json?token=${encodedToken}">Download JSON</a>
   </div>
   ${records.length === 0
     ? '<p>No submissions yet.</p>'
@@ -237,35 +285,60 @@ app.get('/admin', requireAdmin, (req, res) => {
 
 // ── GET /admin/submissions.csv ────────────────────────────────────────────────
 app.get('/admin/submissions.csv', requireAdmin, (req, res) => {
-  if (!fs.existsSync(LOG_PATH)) {
+  const records = getAdminRecords();
+  if (records.length === 0) {
     return res.status(404).send('No submissions yet.');
   }
-  const records = fs.readFileSync(LOG_PATH, 'utf8')
-    .trim().split('\n').filter(Boolean)
-    .map(line => JSON.parse(line));
 
-  const header = ['#', 'Submitted At', 'Title', 'Authors', 'Affiliations', 'ORCIDs', 'Submitter Email', 'Filename'];
+  const header = [
+    '#',
+    'Submitted At (UTC)',
+    'Submitted At (AEST)',
+    'Title',
+    'Authors',
+    'Affiliations',
+    'All Author Emails',
+    'ORCIDs',
+    'Submitter Email',
+    'Abstract',
+    'Original Filename',
+    'Saved Filename'
+  ];
   const csvRows = records.map((r, i) => {
-    const names   = r.authors.map(a => a.name).join(' | ');
-    const affils  = r.authors.map(a => a.affiliation).join(' | ');
-    const orcids  = r.authors.map(a => a.orcid || '').join(' | ');
-    return [i + 1, r.submittedAt, r.title, names, affils, orcids, r.submitter_email, r.originalFilename]
-      .map(v => `"${String(v).replace(/"/g, '""')}"`)
+    const authors = Array.isArray(r.authors) ? r.authors : [];
+    const names   = authors.map(a => a.name || '').join(' | ');
+    const affils  = authors.map(a => a.affiliation || '').join(' | ');
+    const emails  = authors.map(a => a.email || '').join(' | ');
+    const orcids  = authors.map(a => a.orcid || '').join(' | ');
+    return [
+      records.length - i,
+      r.submittedAt,
+      formatSydneyDate(r.submittedAt),
+      r.title,
+      names,
+      affils,
+      emails,
+      orcids,
+      r.submitter_email,
+      r.abstract,
+      r.originalFilename,
+      r.savedFilename
+    ]
+      .map(csvCell)
       .join(',');
   });
 
+  setNoStoreHeaders(res);
   res.setHeader('Content-Type', 'text/csv');
-  res.setHeader('Content-Disposition', 'attachment; filename="submissions.csv"');
+  res.setHeader('Content-Disposition', `attachment; filename="submissions-${exportTimestamp()}.csv"`);
   res.send([header.join(','), ...csvRows].join('\n'));
 });
 
 // ── GET /admin/submissions.json ───────────────────────────────────────────────
 app.get('/admin/submissions.json', requireAdmin, (req, res) => {
-  if (!fs.existsSync(LOG_PATH)) return res.json([]);
-  const records = fs.readFileSync(LOG_PATH, 'utf8')
-    .trim().split('\n').filter(Boolean)
-    .map(line => JSON.parse(line));
-  res.setHeader('Content-Disposition', 'attachment; filename="submissions.json"');
+  const records = getAdminRecords();
+  setNoStoreHeaders(res);
+  res.setHeader('Content-Disposition', `attachment; filename="submissions-${exportTimestamp()}.json"`);
   res.json(records);
 });
 
@@ -289,7 +362,7 @@ app.listen(PORT, () => {
 });
 
 function escHtml(str) {
-  return String(str)
+  return String(str ?? '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
