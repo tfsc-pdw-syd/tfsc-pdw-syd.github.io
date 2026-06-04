@@ -239,7 +239,6 @@ app.get('/admin', requireAdmin, (req, res) => {
     const authorsStr  = authors.map(a => `${escHtml(a.name)} (${escHtml(a.affiliation)})`).join('<br>');
     const authorEmails = authors.map(a => a.email).filter(Boolean).map(escHtml).join('<br>');
     const date        = formatSydneyDate(r.submittedAt);
-    const encTs       = encodeURIComponent(r.submittedAt);
     return `
       <tr>
         <td>${records.length - i}</td>
@@ -250,7 +249,6 @@ app.get('/admin', requireAdmin, (req, res) => {
         <td>${authorEmails}</td>
         <td>${escHtml(r.abstract)}</td>
         <td><a href="/admin/files/${encodeURIComponent(r.savedFilename)}?token=${encodedToken}" download="${escHtml(r.originalFilename)}">${escHtml(r.originalFilename)}</a></td>
-        <td><a href="/admin/delete?token=${encodedToken}&submittedAt=${encTs}" onclick="return confirm('Delete this submission?')" style="color:#c00;">Delete</a></td>
       </tr>`;
   }).join('');
 
@@ -285,28 +283,12 @@ app.get('/admin', requireAdmin, (req, res) => {
   ${records.length === 0
     ? '<p>No submissions yet.</p>'
     : `<table>
-        <thead><tr><th>#</th><th>Date (AEST)</th><th>Title</th><th>Authors</th><th>Submitter Email</th><th>All Author Emails</th><th>Abstract</th><th>File</th><th></th></tr></thead>
+        <thead><tr><th>#</th><th>Date (AEST)</th><th>Title</th><th>Authors</th><th>Submitter Email</th><th>All Author Emails</th><th>Abstract</th><th>File</th></tr></thead>
         <tbody>${rows}</tbody>
        </table>`
   }
 </body>
 </html>`);
-});
-
-// ── GET /admin/delete ─────────────────────────────────────────────────────────
-app.get('/admin/delete', requireAdmin, (req, res) => {
-  const { submittedAt } = req.query;
-  if (!submittedAt) return res.status(400).send('Missing submittedAt parameter.');
-
-  const all = readSubmissionRecords();
-  const filtered = all.filter(r => r.submittedAt !== submittedAt);
-
-  if (filtered.length === all.length) {
-    return res.status(404).send('Record not found.');
-  }
-
-  fs.writeFileSync(LOG_PATH, filtered.map(r => JSON.stringify(r)).join('\n') + (filtered.length ? '\n' : ''));
-  res.redirect('/admin?token=' + encodeURIComponent(req.query.token));
 });
 
 // ── GET /admin/submissions.csv ────────────────────────────────────────────────
