@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import pdfplumber; print\\(''pdfplumber ok''\\)\")",
+      "Bash(python3 -c \"import pypdf; print\\(''pypdf ok''\\)\")",
+      "Bash(python3 -c \"import fitz; print\\(''pymupdf ok''\\)\")",
+      "Bash(python3 -c \":*)",
+      "Bash(pdftotext /Users/mengjiawu/Library/CloudStorage/OneDrive-UTS/Admin/conference/TFSCPDW/assets/flyer.pdf -)",
+      "Bash(brew install poppler)",
+      "Bash(python3 -c \"import pypdf; pdf = pypdf.PdfReader\\(''/Users/mengjiawu/Library/CloudStorage/OneDrive-UTS/Admin/conference/TFSCPDW/assets/flyer.pdf''\\); print\\(f''Pages: {len\\(pdf.pages\\)}''\\); [print\\(f''--- Page {i+1} ---\\\\n{pdf.pages[i].extract_text\\(\\)}''\\) for i in range\\(min\\(5, len\\(pdf.pages\\)\\)\\)]\")",
+      "Bash(python3 -c \"import PyPDF2; pdf = PyPDF2.PdfReader\\(''/Users/mengjiawu/Library/CloudStorage/OneDrive-UTS/Admin/conference/TFSCPDW/assets/flyer.pdf''\\); print\\(f''Pages: {len\\(pdf.pages\\)}''\\); [print\\(f''--- Page {i+1} ---\\\\n{pdf.pages[i].extract_text\\(\\)}''\\) for i in range\\(min\\(5, len\\(pdf.pages\\)\\)\\)]\")",
+      "Bash(python3 -c \"import pdfminer\")",
+      "Bash(python3 -m pip list)"
+    ]
+  }
+}

@@ -241,7 +241,10 @@ app.get('/admin', requireAdmin, (req, res) => {
     const date        = formatSydneyDate(r.submittedAt);
     return `
       <tr>
-        <td>${records.length - i}</td>
+        <td>
+          ${records.length - i}
+          <br><button onclick="deletePaper(${records.length - i}, this)" style="margin-top:4px;font-size:0.75rem;color:#8b0000;background:none;border:1px solid #8b0000;border-radius:3px;cursor:pointer;padding:2px 6px;">Delete</button>
+        </td>
         <td>${date}</td>
         <td>${escHtml(r.title)}</td>
         <td>${authorsStr}</td>
@@ -273,6 +276,19 @@ app.get('/admin', requireAdmin, (req, res) => {
     .actions a { margin-right: 1rem; padding: 8px 16px; background: #8b0000; color: #fff;
                  text-decoration: none; border-radius: 4px; font-size: 0.9rem; }
   </style>
+<script>
+  function deletePaper(n, btn) {
+    if (!confirm('Delete paper #' + n + '? This cannot be undone.')) return;
+    const token = new URLSearchParams(location.search).get('token');
+    fetch('/admin/submission?n=' + n + '&token=' + encodeURIComponent(token), { method: 'DELETE' })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) { alert('Deleted: ' + data.deleted.title); location.reload(); }
+        else alert('Error: ' + (data.error || 'Unknown error'));
+      })
+      .catch(() => alert('Request failed'));
+  }
+</script>
 </head>
 <body>
   <h1>TFSC PDW 2026 - Submissions (${records.length})</h1>
@@ -348,6 +364,37 @@ app.get('/admin/submissions.json', requireAdmin, (req, res) => {
   setNoStoreHeaders(res);
   res.setHeader('Content-Disposition', `attachment; filename="submissions-${exportTimestamp()}.json"`);
   res.json(records);
+});
+
+// ── DELETE /admin/submission?n=N ─────────────────────────────────────────────
+app.delete('/admin/submission', requireAdmin, (req, res) => {
+  const n = parseInt(req.query.n, 10);
+  const records = getAdminRecords();
+
+  if (isNaN(n) || n < 1 || n > records.length) {
+    return res.status(400).json({ error: `Invalid paper number. Must be between 1 and ${records.length}.` });
+  }
+
+  // Paper #n is at index (records.length - n) in the newest-first array
+  const target = records[records.length - n];
+
+  // Rewrite the JSONL excluding any line matching this submittedAt
+  const allLines = fs.existsSync(LOG_PATH)
+    ? fs.readFileSync(LOG_PATH, 'utf8').trim().split('\n').filter(Boolean)
+    : [];
+
+  const kept = allLines.filter(line => {
+    try { return JSON.parse(line).submittedAt !== target.submittedAt; }
+    catch { return true; }
+  });
+
+  fs.writeFileSync(LOG_PATH, kept.join('\n') + (kept.length ? '\n' : ''));
+
+  // Delete the manuscript file if it exists
+  const filePath = path.join(FILES_DIR, path.basename(target.savedFilename));
+  if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+
+  res.json({ success: true, deleted: { n, title: target.title, savedFilename: target.savedFilename } });
 });
 
 // ── GET /admin/files/:filename ────────────────────────────────────────────────
