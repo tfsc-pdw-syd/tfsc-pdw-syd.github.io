@@ -241,10 +241,7 @@ app.get('/admin', requireAdmin, (req, res) => {
     const date        = formatSydneyDate(r.submittedAt);
     return `
       <tr>
-        <td>
-          ${records.length - i}
-          <br><button onclick="deletePaper(${records.length - i}, this)" style="margin-top:4px;font-size:0.75rem;color:#8b0000;background:none;border:1px solid #8b0000;border-radius:3px;cursor:pointer;padding:2px 6px;">Delete</button>
-        </td>
+        <td>${records.length - i}</td>
         <td>${date}</td>
         <td>${escHtml(r.title)}</td>
         <td>${authorsStr}</td>
@@ -276,19 +273,6 @@ app.get('/admin', requireAdmin, (req, res) => {
     .actions a { margin-right: 1rem; padding: 8px 16px; background: #8b0000; color: #fff;
                  text-decoration: none; border-radius: 4px; font-size: 0.9rem; }
   </style>
-<script>
-  function deletePaper(n, btn) {
-    if (!confirm('Delete paper #' + n + '? This cannot be undone.')) return;
-    const token = new URLSearchParams(location.search).get('token');
-    fetch('/admin/submission?n=' + n + '&token=' + encodeURIComponent(token), { method: 'DELETE' })
-      .then(r => r.json())
-      .then(data => {
-        if (data.success) { alert('Deleted: ' + data.deleted.title); location.reload(); }
-        else alert('Error: ' + (data.error || 'Unknown error'));
-      })
-      .catch(() => alert('Request failed'));
-  }
-</script>
 </head>
 <body>
   <h1>TFSC PDW 2026 - Submissions (${records.length})</h1>
