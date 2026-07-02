@@ -322,47 +322,12 @@
               <li>References</li>
             </ul>
           </div>
-          <h3 class="about-section-heading" style="margin-top: 28px;">Submit Your Extended Abstract</h3>
-          <form id="submission-form" class="sub-form" novalidate>
-
-            <div class="sub-form-group">
-              <label class="sub-label" for="paper-title">Paper Title <span class="sub-required">*</span></label>
-              <input class="sub-input" type="text" id="paper-title" required
-                     placeholder="Enter the full title of your paper">
+          <div class="callout" style="margin-top: 28px; background: linear-gradient(135deg, #fce4ec, #f8bbd0); border-color: #e57373; border-left-color: #c62828;">
+            <div>
+              <strong style="color: #b71c1c;">Submissions Closed</strong>
+              <p style="color: #7f1515; margin: 0;">The submission period has now closed. If you have any questions, please contact us at <a href="mailto:tfscpdwsyd@gmail.com" style="color: #b71c1c;">tfscpdwsyd@gmail.com</a>.</p>
             </div>
-
-            <div class="sub-form-group">
-              <label class="sub-label">Authors <span class="sub-required">*</span></label>
-              <div class="author-row-header">
-                <span>Full Name</span><span>Affiliation</span><span>Email</span><span>ORCID (optional)</span><span></span>
-              </div>
-              <div id="authors-list"></div>
-              <button type="button" class="sub-btn-add" id="btn-add-author">+ Add Another Author</button>
-            </div>
-
-            <div class="sub-form-group">
-              <label class="sub-label" for="paper-abstract">Abstract <span class="sub-required">*</span></label>
-              <textarea class="sub-input sub-textarea" id="paper-abstract" required
-                        placeholder="Paste your abstract here"></textarea>
-            </div>
-
-            <div class="sub-form-group">
-              <label class="sub-label" for="sub-email">Corresponding Author Email <span class="sub-required">*</span></label>
-              <input class="sub-input" type="email" id="sub-email" required
-                     placeholder="you@example.com">
-              <small class="sub-hint">Confirmation email will be sent here; co-authors will be CC'd.</small>
-            </div>
-
-            <div class="sub-form-group">
-              <label class="sub-label" for="manuscript-file">Manuscript <span class="sub-required">*</span></label>
-              <input class="sub-file-input" type="file" id="manuscript-file"
-                     accept=".pdf,.doc,.docx" required>
-              <small class="sub-hint">PDF or Word document (.pdf, .doc, .docx) · Maximum 20 MB</small>
-            </div>
-
-            <div id="sub-message" class="sub-message" hidden></div>
-            <button type="submit" class="sub-btn-submit" id="btn-submit">Submit Paper</button>
-          </form>
+          </div>
         </div>
 
         <!-- KEY DATES -->
@@ -508,112 +473,5 @@
       })();
     </script>
 
-    <script>
-      /* ── Submission Form ── */
-      (function () {
-        const form = document.getElementById('submission-form');
-        if (!form) return;
-
-        let authorCount = 0;
-
-        function addAuthor(isFirst) {
-          authorCount++;
-          const list = document.getElementById('authors-list');
-          const row  = document.createElement('div');
-          row.className = 'author-row';
-          row.innerHTML = `
-            <input class="sub-input" type="text"  name="author_name"  placeholder="Full Name${isFirst ? ' *' : ''}"  ${isFirst ? 'required' : ''}>
-            <input class="sub-input" type="text"  name="author_affil" placeholder="Affiliation${isFirst ? ' *' : ''}" ${isFirst ? 'required' : ''}>
-            <input class="sub-input" type="email" name="author_email" placeholder="Email${isFirst ? ' *' : ' (optional)'}">
-            <input class="sub-input" type="text"  name="author_orcid" placeholder="ORCID (optional)">
-            ${isFirst ? '<span></span>' : '<button type="button" class="sub-btn-remove" title="Remove author">&#x2715;</button>'}
-          `;
-          if (!isFirst) {
-            row.querySelector('.sub-btn-remove').addEventListener('click', () => row.remove());
-          }
-          list.appendChild(row);
-        }
-
-        addAuthor(true);
-        document.getElementById('btn-add-author').addEventListener('click', () => addAuthor(false));
-
-        form.addEventListener('submit', async function (e) {
-          e.preventDefault();
-          const btn = document.getElementById('btn-submit');
-          const msg = document.getElementById('sub-message');
-
-          /* Collect authors */
-          const authors = [];
-          let authorsValid = true;
-          let firstAuthorEmailMissing = false;
-          document.querySelectorAll('.author-row').forEach((row, idx) => {
-            const name  = row.querySelector('[name="author_name"]').value.trim();
-            const affil = row.querySelector('[name="author_affil"]').value.trim();
-            const email = row.querySelector('[name="author_email"]').value.trim();
-            const orcid = row.querySelector('[name="author_orcid"]').value.trim();
-            if (!name || !affil) { authorsValid = false; return; }
-            if (idx === 0 && !email) { firstAuthorEmailMissing = true; return; }
-            authors.push({ name, affiliation: affil, email, orcid });
-          });
-
-          if (!authorsValid || authors.length === 0) {
-            return showMsg(msg, 'Please fill in the name and affiliation for every author.', 'error');
-          }
-          if (firstAuthorEmailMissing) {
-            return showMsg(msg, 'Please enter an email address for the first author.', 'error');
-          }
-
-          const title    = document.getElementById('paper-title').value.trim();
-          const abstract = document.getElementById('paper-abstract').value.trim();
-          const email    = document.getElementById('sub-email').value.trim();
-          const file     = document.getElementById('manuscript-file').files[0];
-
-          if (!title)    return showMsg(msg, 'Please enter the paper title.', 'error');
-          if (!abstract) return showMsg(msg, 'Please enter the abstract.', 'error');
-          if (!email)    return showMsg(msg, 'Please enter the corresponding author email.', 'error');
-          if (!file)     return showMsg(msg, 'Please attach your manuscript.', 'error');
-          if (file.size > 20 * 1024 * 1024) {
-            return showMsg(msg, 'File exceeds the 20 MB limit. Please compress and try again.', 'error');
-          }
-
-          const fd = new FormData();
-          fd.append('title',           title);
-          fd.append('abstract',        abstract);
-          fd.append('submitter_email', email);
-          fd.append('authors',         JSON.stringify(authors));
-          fd.append('manuscript',      file);
-
-          btn.disabled    = true;
-          btn.textContent = 'Submitting…';
-          msg.hidden      = true;
-
-          try {
-            const res  = await fetch('/submit', { method: 'POST', body: fd });
-            const data = await res.json();
-            if (data.success) {
-              showMsg(msg, 'Your submission has been received. A confirmation email has been sent to ' + email + '.', 'success');
-              form.reset();
-              document.getElementById('authors-list').innerHTML = '';
-              authorCount = 0;
-              addAuthor(true);
-            } else {
-              throw new Error(data.error || 'Submission failed.');
-            }
-          } catch (err) {
-            showMsg(msg, err.message || 'An error occurred. Please try again or email tfscpdwsyd@gmail.com directly.', 'error');
-          } finally {
-            btn.disabled    = false;
-            btn.textContent = 'Submit Paper';
-          }
-        });
-
-        function showMsg(el, text, type) {
-          el.textContent = text;
-          el.className   = 'sub-message sub-message--' + type;
-          el.hidden      = false;
-          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      })();
-    </script>
   </body>
 </html>
