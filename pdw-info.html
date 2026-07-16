@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TFSC PDW 2026 — Agenda &amp; WiFi</title>
+<style>
+@page { size: A4 portrait; margin: 0; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --brand:      #b71c1c;
+  --brand-deep: #7f1212;
+  --ink:        #1a1a20;
+  --soft:       #52525f;
+  --border:     #d8d8e0;
+  --tint:       #f7f7f9;
+  --white:      #ffffff;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+html, body {
+  background: var(--white);
+  font-family: var(--font);
+  font-size: 16px;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem;
+  background: #ccc;
+}
+
+.page {
+  background: var(--white);
+  width: 210mm;
+  min-height: 297mm;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 32px rgba(0,0,0,.18);
+}
+
+/* ── Header ── */
+.hd {
+  background: var(--brand);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  padding: 32px 36px 30px;
+}
+.hd__eyebrow {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+  margin-bottom: 8px;
+}
+.hd__title {
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1.1;
+  letter-spacing: -.01em;
+}
+.hd__sub {
+  margin-top: 8px;
+  font-size: 17px;
+  color: rgba(255,255,255,.82);
+  font-weight: 400;
+}
+.rule {
+  height: 4px;
+  background: var(--brand-deep);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ── Body ── */
+.body { flex: 1; display: flex; flex-direction: column; }
+
+/* ── QR section ── */
+.qr-sec {
+  padding: 32px 32px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.qr-eyebrow {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--brand);
+  margin-bottom: 10px;
+}
+.qr-heading {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+.qr-frame {
+  padding: 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 288px;
+  height: 288px;
+}
+.qr-frame canvas,
+.qr-frame img {
+  display: block;
+  width: 260px !important;
+  height: 260px !important;
+}
+.qr-meta {
+  margin-top: 18px;
+  font-size: 17px;
+  color: var(--soft);
+}
+.qr-url {
+  margin-top: 5px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: .01em;
+}
+
+/* ── WiFi section ── */
+.wifi-sec {
+  padding: 28px 32px 32px;
+  flex: 1;
+}
+.sec-hd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.sec-icon {
+  color: var(--brand);
+  display: flex;
+  align-items: center;
+}
+.sec-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.steps { display: flex; flex-direction: column; gap: 12px; }
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--tint);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.step-n {
+  width: 32px; height: 32px;
+  background: var(--brand);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color: white;
+  font-size: 15px;
+  font-weight: 800;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.step-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--soft);
+  margin-bottom: 4px;
+}
+.step-val {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.step-val code {
+  font-family: "SF Mono", "Fira Code", Consolas, monospace;
+  background: rgba(183,28,28,.08);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color: var(--brand-deep);
+  padding: 3px 12px;
+  border-radius: 6px;
+  font-size: 22px;
+  letter-spacing: .08em;
+  font-weight: 700;
+}
+
+/* ── Print ── */
+@media print {
+  body { background: white; padding: 0; margin: 0; display: block; }
+  .page { box-shadow: none; width: 210mm; height: 297mm; min-height: 0; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hd">
+    <div class="hd__eyebrow">Paper Development Workshop · Sydney, Australia</div>
+    <div class="hd__title">TFSC PDW 2026</div>
+    <div class="hd__sub">Technological Forecasting &amp; Social Change &nbsp;·&nbsp; 16 July 2026 &nbsp;·&nbsp; UTS Building 8 (CB08.02.002)</div>
+  </div>
+  <div class="rule"></div>
+
+  <div class="body">
+
+    <div class="qr-sec">
+      <div class="qr-eyebrow">Workshop Agenda</div>
+      <div class="qr-heading">Scan to view the full workshop agenda</div>
+      <div class="qr-frame" id="qr-canvas"></div>
+      <div class="qr-meta">Or type in your browser</div>
+      <div class="qr-url">tfsc-pdw-2026.onrender.com/#agenda</div>
+    </div>
+
+    <div class="wifi-sec">
+      <div class="sec-hd">
+        <div class="sec-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+            <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+            <circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <div class="sec-title">WiFi Connection</div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-n">1</div>
+          <div>
+            <div class="step-label">Connect to network</div>
+            <div class="step-val">UTS-Guest</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-n">2</div>
+          <div>
+            <div class="step-label">When prompted, choose</div>
+            <div class="step-val">Attending a conference or event</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-n">3</div>
+          <div>
+            <div class="step-label">Enter access code</div>
+            <div class="step-val"><code>FHJul26%</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  new QRCode(document.getElementById("qr-canvas"), {
+    text: "https://tfsc-pdw-2026.onrender.com/#agenda",
+    width: 260,
+    height: 260,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.M
+  });
+</script>
+</body>
+</html>
